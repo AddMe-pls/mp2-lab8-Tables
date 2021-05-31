@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     value_spinbox_ = new QSpinBox;
     efficiency_label_ = new QLabel("NO CALCULATIONS");
     eff_clear_button_ = new QPushButton("CLEAR EFF");
+    print_table_button_ = new QPushButton("PRINT");
     exit_button_ = new QPushButton("EXIT");
 
     table_ = nullptr;
@@ -46,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     table_type_combobox_->addItem("SORT TABLE");
     table_type_combobox_->addItem("TREE TABLE");
     table_type_combobox_->addItem("HASH TABLE");
+    table_type_combobox_->addItem("BALANCED TREE TABLE");
 
     table_size_spinbox_->setRange(0, SHRT_MAX);
     key_spinbox_->setRange(0, SHRT_MAX);
@@ -60,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     connect(delete_table_button_, &QPushButton::clicked, this, &MainWindow::DeleteTable);
     connect(generate_random_table_, &QPushButton::clicked, this, &MainWindow::GenerateRandom);
     connect(eff_clear_button_, &QPushButton::clicked, this, &MainWindow::ClearEff);
+    connect(print_table_button_, &QPushButton::clicked, this, &MainWindow::PrintTable);
     connect(random_value_checkbox_, &QCheckBox::stateChanged, this, &MainWindow::ChangeRandomState);
     connect(operation_insert_radiobuttons_, &QPushButton::clicked, this, &MainWindow::Insert);
     connect(operation_find_radiobuttons_, &QPushButton::clicked, this, &MainWindow::Find);
@@ -85,6 +88,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent) {
     main_layout_->addWidget(random_value_checkbox_);
     main_layout_->addLayout(record_value_layout_);
     main_layout_->addWidget(efficiency_label_);
+    main_layout_->addWidget(eff_clear_button_);
+    main_layout_->addWidget(print_table_button_);
     main_layout_->addWidget(exit_button_);
 
     over_layout_->addLayout(main_layout_);
@@ -102,6 +107,7 @@ void MainWindow::CreateTable() {
             case 1: table_ = new TSortTable(table_size_spinbox_->value()); break;
             case 2: table_ = new TTreeTable(table_size_spinbox_->value()); break;
             case 3: table_ = new HashTable(table_size_spinbox_->value(), hash_table_step_spinbox_->value()); break;
+            case 4: table_ = new TBalanceTreeTable(table_size_spinbox_->value()); break;
             default: break;
         }
         ChangeEff();
@@ -213,9 +219,19 @@ void MainWindow::ChangeEff() {
 }
 
 void MainWindow::ClearEff() {
-    if (table_)
+    if (table_) {
         table_->ClearEff();
+        AddToHistory(kEffCleared);
+    }
     ChangeEff();
+}
+
+void MainWindow::PrintTable() {
+    if (table_) {
+        table_->Print();
+        AddToHistory(kTablePrinted);
+    }
+    else efficiency_label_->setText("NO TABLE");
 }
 
 void MainWindow::AddToHistory(action_result result) {
@@ -252,6 +268,12 @@ void MainWindow::AddToHistory(action_result result) {
             break;
         case kRecordNotDeleted:
             history_list_->insertItem(0, QString::number(history_list_->count() + 1) + QString(") RECORD KEY: ") + QString::number(key_spinbox_->value()) + QString(" NOT DELETED"));
+            break;
+        case kEffCleared:
+            history_list_->insertItem(0, QString::number(history_list_->count() + 1) + ") EFFECTIVENESS CLEARED");
+            break;
+        case kTablePrinted:
+            history_list_->insertItem(0, QString::number(history_list_->count() + 1) + ") TABLE PRINTED TO THE FILE");
             break;
     }
 }

@@ -99,6 +99,35 @@ TEST(TTreeTable, can_delete_record_from_tree_table)
 	ASSERT_NO_THROW(t.Delete(n.key));
 }
 
+TEST(TBalanceTreeTable, can_create_balance_tree_table)
+{
+	ASSERT_NO_THROW(TBalanceTreeTable tab);
+}
+
+TEST(TBalanceTreeTable, can_find_record_in_balance_tree_table)
+{
+	TRecord r;
+	TBalanceTreeTable t;
+	t.Insert(r);
+	ASSERT_NO_THROW(t.Find(r.key));
+}
+
+TEST(TBalanceTreeTable, can_insert_record_to_balance_tree_table)
+{
+	TRecord r;
+	TBalanceTreeTable t;
+	ASSERT_NO_THROW(t.Insert(r));
+}
+
+TEST(TBalanceTreeTable, can_delete_record_from_balance_tree_table)
+{
+	TRecord r;
+	TNode n(r);
+	TBalanceTreeTable t;
+	t.Insert(n);
+	ASSERT_NO_THROW(t.Delete(n.key));
+}
+
 TEST(HashTable, can_create_hash_table)
 {
 	ASSERT_NO_THROW(HashTable tab);

@@ -1,4 +1,3 @@
-
 #include <QApplication>
 #include <QWidget>
 #include <QComboBox>
@@ -51,13 +50,14 @@ protected:
     QSpinBox *value_spinbox_;
     QLabel *efficiency_label_;
     QPushButton *eff_clear_button_;
+    QPushButton* print_table_button_;
     QPushButton *exit_button_;
 
     TTable *table_;
 
     QSpinBox* hash_table_step_spinbox_;
 
-    typedef enum {kTableCreated, kTableCreationError, kTableDeleted, kTableDeletionError, kTableNotExists, kRecordInserted, kRecordNotInserted, kRecordFinded, kRecordNotFinded, kRecordDeleted, kRecordNotDeleted} action_result;
+    typedef enum {kTableCreated, kTableCreationError, kTableDeleted, kTableDeletionError, kTableNotExists, kRecordInserted, kRecordNotInserted, kRecordFinded, kRecordNotFinded, kRecordDeleted, kRecordNotDeleted, kEffCleared, kTablePrinted} action_result;
 protected slots:
     void CreateTable();
     void DeleteTable();
@@ -68,6 +68,7 @@ protected slots:
     void Delete();
     void ChangeEff();
     void ClearEff();
+    void PrintTable();
 
     void AddToHistory(action_result result);
 public:

@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <fstream>
+#include<stdio.h>
 
 typedef	int TKey;
 typedef int TVal;
@@ -19,10 +21,7 @@ protected:
 	int DataCount, Eff;
 public:
 	virtual ~TTable() = default;
-	bool IsEmpty()
-	{
-		if (DataCount == 0) return true; else return false;
-	}
+	bool IsEmpty() { if (DataCount == 0) return true; else return false; }
 	virtual bool Find(TKey key) = 0; 
 	virtual bool IsFull() const = 0; 
 	virtual bool Insert(TRecord rec) = 0; 
@@ -33,14 +32,16 @@ public:
 	virtual int GetSize() const = 0;
 	virtual TRecord GetCurrRec() const = 0;
 	virtual int GetDataCount() const { return DataCount; }
-	void Print()
-	{
-		for (Reset(); !IsEnd(); GoNext())
-		{
-			//
-		}
-	}
 	int GetEff() const { return Eff; }
 	void ClearEff() { Eff = 0; }
+	virtual void Print()
+	{
+		std::ofstream osf("Table.txt");
+		for (Reset(); !IsEnd(); GoNext())
+		{
+			osf << GetCurrRec().key << std::endl;
+		}
+		osf.close();
+	}
 };
 

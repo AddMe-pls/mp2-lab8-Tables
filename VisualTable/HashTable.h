@@ -56,6 +56,7 @@ public:
 			mas[Curr] = rec;
 			DataCount++;
 			Eff++;
+			return true;
 		}
 		else
 			return false;
